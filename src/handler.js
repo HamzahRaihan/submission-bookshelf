@@ -1,6 +1,3 @@
-// import { nanoid } from 'nanoid';
-// import books from './books';
-
 const { nanoid } = require('nanoid')
 const books = require('./books')
 
@@ -73,6 +70,92 @@ const addBooksHandler = (request, h) => {
 }
 
 const getAllBooksHandler = (request, h) => {
+  const { name, reading, finished } = request.query
+
+  const dicodingBooks = books.filter((book) => book.name.toLowerCase().includes('dicoding'))
+
+  const readingBooks = books.filter((book) => book.reading === true)
+
+  const unreadingBooks = books.filter((book) => book.reading === false)
+
+  const finishedBooks = books.filter((book) => book.finished === true)
+
+  const unfinishedBooks = books.filter((book) => book.finished === false)
+
+  // Fitur query parameter untuk buku dengan judul "dicoding"
+  if (name) {
+    const response = h.response({
+      status: 'success',
+      data: {
+        books: dicodingBooks.map((book) => ({
+          id: book.id,
+          name: book.name,
+          publisher: book.publisher
+        }))
+      }
+    })
+    response.code(200)
+    return response
+  }
+
+  // Fitur query parameter untuk buku yang sudah sedang dibaca
+  if (reading === '1') {
+    const response = h.response({
+      status: 'status',
+      data: {
+        books: readingBooks.map((book) => ({
+          id: book.id,
+          name: book.name,
+          publisher: book.publisher
+        }))
+      }
+    })
+    response.code(200)
+    return response
+  } else if (reading === '0') {
+    const response = h.response({
+      status: 'status',
+      data: {
+        books: unreadingBooks.map((book) => ({
+          id: book.id,
+          name: book.name,
+          publisher: book.publisher
+        }))
+      }
+    })
+    response.code(200)
+    return response
+  }
+
+  // Fitur query parameter untuk buku yang sudah selesai dibaca
+  if (finished === '1') {
+    const response = h.response({
+      status: 'success',
+      data: {
+        books: finishedBooks.map((book) => ({
+          id: book.id,
+          name: book.name,
+          publisher: book.publisher
+        }))
+      }
+    })
+    response.code(200)
+    return response
+  } else if (finished === '0') {
+    const response = h.response({
+      status: 'success',
+      data: {
+        books: unfinishedBooks.map((book) => ({
+          id: book.id,
+          name: book.name,
+          publisher: book.publisher
+        }))
+      }
+    })
+    response.code(200)
+    return response
+  }
+
   const response = h.response({
     status: 'success',
     data: {

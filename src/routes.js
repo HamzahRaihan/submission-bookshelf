@@ -1,5 +1,3 @@
-// import { addBooksHandler } from './handler';
-
 const { addBooksHandler, getAllBooksHandler, getBookDetailByIdHandler, editBooksByIdHandler, deleteBooksByIdHandler } = require('./handler')
 
 const routes = [
