@@ -70,9 +70,7 @@ const addBooksHandler = (request, h) => {
 }
 
 const getAllBooksHandler = (request, h) => {
-  const { name, reading, finished } = request.query
-
-  const dicodingBooks = books.filter((book) => book.name.toLowerCase().includes('dicoding'))
+  const { reading, finished } = request.query
 
   const readingBooks = books.filter((book) => book.reading === true)
 
@@ -81,22 +79,6 @@ const getAllBooksHandler = (request, h) => {
   const finishedBooks = books.filter((book) => book.finished === true)
 
   const unfinishedBooks = books.filter((book) => book.finished === false)
-
-  // Fitur query parameter untuk buku dengan judul "dicoding"
-  if (name) {
-    const response = h.response({
-      status: 'success',
-      data: {
-        books: dicodingBooks.map((book) => ({
-          id: book.id,
-          name: book.name,
-          publisher: book.publisher
-        }))
-      }
-    })
-    response.code(200)
-    return response
-  }
 
   // Fitur query parameter untuk buku yang sudah sedang dibaca
   if (reading === '1') {
