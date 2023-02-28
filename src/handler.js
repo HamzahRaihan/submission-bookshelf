@@ -24,8 +24,6 @@ const addBooksHandler = (request, h) => {
     updatedAt
   }
 
-  books.push(newBooks)
-
   // Input gagal karena tidak menambahkan judul
   if (!name) {
     const response = h.response({
@@ -45,6 +43,8 @@ const addBooksHandler = (request, h) => {
     response.code(400)
     return response
   }
+
+  books.push(newBooks)
 
   const isSuccess = books.filter((book) => book.id === id).length > 0
 
@@ -70,7 +70,7 @@ const addBooksHandler = (request, h) => {
 }
 
 const getAllBooksHandler = (request, h) => {
-  const { reading, finished } = request.query
+  const { name, reading, finished } = request.query
 
   const readingBooks = books.filter((book) => book.reading === true)
 
@@ -79,6 +79,27 @@ const getAllBooksHandler = (request, h) => {
   const finishedBooks = books.filter((book) => book.finished === true)
 
   const unfinishedBooks = books.filter((book) => book.finished === false)
+
+  // Fitur query parameter untuk pencarian buku
+  if (books.length > 0) {
+    let filteredBooks = books
+    if (name) {
+      filteredBooks = books.filter((book) => book.name.toLowerCase().includes(name.toLowerCase()))
+    }
+
+    const response = h.response({
+      status: 'success',
+      data: {
+        books: filteredBooks.map((book) => ({
+          id: book.id,
+          name: book.name,
+          publisher: book.publisher
+        }))
+      }
+    })
+    response.code(200)
+    return response
+  }
 
   // Fitur query parameter untuk buku yang sudah sedang dibaca
   if (reading === '1') {
